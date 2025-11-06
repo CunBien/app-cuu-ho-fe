@@ -1,20 +1,25 @@
 // src/hooks/useIncidents.js
 
-import { useEffect } from 'react';
-import { useIncidentStore } from '../store/incidentStore';
+import { useEffect } from "react";
+import { useIncidentStore } from "../../store/incidentStore";
 
 export const useIncidents = () => {
   const incidents = useIncidentStore((state) => state.incidents);
   const isLoading = useIncidentStore((state) => state.isLoading);
   const selectedIncident = useIncidentStore((state) => state.selectedIncident);
-  const { fetchIncidents, setSelectedIncident } = useIncidentStore((state) => state.actions);
+  const { fetchIncidents, setSelectedIncident } = useIncidentStore(
+    (state) => state.actions
+  );
 
-  console.log('Hook useIncidents được render.');
+  console.log("Hook useIncidents được render.");
 
   useEffect(() => {
-    console.log('useEffect trong useIncidents đang chạy.');
-    if (useIncidentStore.getState().incidents.length === 0 && !useIncidentStore.getState().isLoading) {
-         fetchIncidents();
+    console.log("useEffect trong useIncidents đang chạy.");
+    if (
+      useIncidentStore.getState().incidents.length === 0 &&
+      !useIncidentStore.getState().isLoading
+    ) {
+      fetchIncidents();
     }
   }, []);
 

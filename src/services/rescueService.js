@@ -1,14 +1,16 @@
 // src/services/rescueService.js
 
-import { mockIncidents } from '../data/mockData';
+import { mockData } from "../data/mockData";
 
 // Giả lập một cuộc gọi API
-export const getAllIncidents = async () => {
-  console.log('Fetching incidents from API...');
-  return new Promise(resolve => {
-    setTimeout(() => {
-      console.log('Fetched incidents successfully.');
-      resolve(mockIncidents);
-    }, 1000);
+const delay = (ms) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
   });
+
+export const getAllIncidents = async () => {
+  console.log("Fetching incidents from API...");
+  await delay(1000);
+  console.log("Fetched incidents succesfully!");
+  return mockData;
 };
