@@ -1,6 +1,16 @@
 // src/data/mockData.js
 // YYYY-MM-DDTHH:mm:ssZ
-
+/**
+ * @typedef {Object} Incident
+ * @property {string} id - Mã định danh duy nhất cho sự kiện
+ * @property {string} name - Tên hoặc địa điểm xảy ra thảm hoạ
+ * @property {[number, number]} coordinates - Tọa độ [longitude, latitude]
+ * @property {"critical"|"high"|"medium"|"low"} urgency - Mức độ khẩn cấp
+ * @property {"flood"|"landslide"|"storm"} disasterType - Loại thảm hoạ
+ * @property {number} floodLevel - Mức nước (m)
+ * @property {number} affectedPeople - Số người bị ảnh hưởng
+ * @property {string} timestamp - Thời điểm ghi nhận (ISO 8601)
+ */
 export const mockData = [
   {
     id: "1",
