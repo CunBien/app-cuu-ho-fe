@@ -28,7 +28,7 @@ const center = [16.0471, 108.2062]; // Việt Nam
  * @typedef {"all"|"flood"|"landslide"|"storm"} DisasterType
  */
 
-export default function App() {
+export default function IncientPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDisaster, setSelectedDisaster] = useState("all");
   const [selectedUrgency, setSelectedUrgency] = useState("all");

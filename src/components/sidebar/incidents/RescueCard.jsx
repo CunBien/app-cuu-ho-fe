@@ -41,6 +41,10 @@ export default function RescueCard({ data }) {
             {data.status === "pending" ? "Chờ xử lý" : "Đang xử lý"}
           </span>
         </p>
+        <p>
+          <strong>Mô tả:</strong>
+          <span className="text-ellipsis px-2 italic">{data.description}</span>
+        </p>
       </div>
 
       <p className="text-xs text-gray-500 mt-2">
