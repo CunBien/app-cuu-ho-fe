@@ -1,4 +1,29 @@
 // src/data/mockData.js
+
+export const mockIncidents = [
+    {
+      id: 1,
+      title: 'Cháy tại tòa nhà Landmark 81',
+      status: 'new',
+      latitude: 10.7951,
+      longitude: 106.7219,
+      image: 'https://cand.com.vn/Files/Image/phanlinh/2019/10/24/thumb_660_67a7e223-5a87-4f38-a5ab-1280248214f4.jpg',
+    },
+    {
+      id: 2,
+      title: 'Kẹt xe nghiêm trọng tại ngã tư Hàng Xanh',
+      status: 'in_progress',
+      latitude: 10.7968,
+      longitude: 106.7035,
+    },
+    {
+      id: 3,
+      title: 'Sự cố mất điện đã được xử lý',
+      status: 'resolved',
+      latitude: 10.7769, // Dinh Độc Lập
+      longitude: 106.6954,
+    },
+  ];
 // YYYY-MM-DDTHH:mm:ssZ
 /**
  * @typedef {Object} Incident
@@ -10,6 +35,7 @@
  * @property {number} floodLevel - Mức nước (m)
  * @property {number} affectedPeople - Số người bị ảnh hưởng
  * @property {string} timestamp - Thời điểm ghi nhận (ISO 8601)
+ * @property {string} [image] - URL hình ảnh minh họa (tùy chọn)
  */
 export const mockData = [
   {
@@ -24,6 +50,8 @@ export const mockData = [
     description:
       "Ngập lụt nghiêm trọng, cần cứu trợ khẩn cấp. Nhiều hộ dân bị cô lập.",
     status: "pending",
+    image:
+      "https://cdn.nhandan.vn/images/1ef398c4e2fb4bf07980a2ded785b3ef5dbd64547caaf87285f6077ef7b3b7aba69a293d9e0eaf8d7d221e905cac0c684e2a626b4c92785d1efce664433370b002477dacb7745cc4f5f9ad33cbcbec23/1730075214745-7761.jpeg",
   },
   {
     id: "2",
@@ -61,6 +89,8 @@ export const mockData = [
     description:
       "Sạt lở đất nghiêm trọng, nhiều nhà bị vùi lấp. Cần cứu hộ ngay.",
     status: "pending",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1o3RjD9xU77oj-ns49dBeR4xi4YKTJuT_wg&s",
   },
   {
     id: "5",
@@ -111,3 +141,4 @@ export const mockData = [
     status: "pending",
   },
 ];
+
