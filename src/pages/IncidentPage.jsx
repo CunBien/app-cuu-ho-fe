@@ -6,6 +6,7 @@ import SearchBar from "../components/sidebar/search/SearchBar";
 import FilterPanel from "../components/sidebar/filter/FilterPanel";
 import RescueCard from "../components/sidebar/incidents/RescueCard";
 import MapView from "../components/map/MapView";
+import Header from "../components/header/Header";
 import { useFilteredData } from "../hooks/useFilteredData";
 
 const center = [16.0471, 108.2062]; // Việt Nam
@@ -15,6 +16,7 @@ export default function IncientPage() {
   const [selectedDisaster, setSelectedDisaster] = useState("all");
   const [selectedUrgency, setSelectedUrgency] = useState("all");
   const [mapBounds, setMapBounds] = useState(null);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const filteredData = useFilteredData(
     mockData,
@@ -29,38 +31,41 @@ export default function IncientPage() {
   };
 
   return (
-    <div className="flex h-screen">
-      <Sidebar>
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <FilterPanel
-          selectedDisaster={selectedDisaster}
-          setSelectedDisaster={setSelectedDisaster}
-          selectedUrgency={selectedUrgency}
-          setSelectedUrgency={setSelectedUrgency}
-        />
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {filteredData.length === 0 ? (
-            <p className="text-gray-500 text-center">
-              Không tìm thấy thông tin cứu hộ.
-            </p>
-          ) : (
-            filteredData.map((item) => (
-              <RescueCard
-                key={item.id}
-                incident={item} // ✅ Sửa ở đây: data -> incident
-                onFocus={handleFocus}
-              />
-            ))
-          )}
-        </div>
-      </Sidebar>
+    <div>
+      <Header />
+      <div className="flex flex-row h-screen">
+        <Sidebar>
+          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <FilterPanel
+            selectedDisaster={selectedDisaster}
+            setSelectedDisaster={setSelectedDisaster}
+            selectedUrgency={selectedUrgency}
+            setSelectedUrgency={setSelectedUrgency}
+          />
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {filteredData.length === 0 ? (
+              <p className="text-gray-500 text-center">
+                Không tìm thấy thông tin cứu hộ.
+              </p>
+            ) : (
+              filteredData.map((item) => (
+                <RescueCard
+                  key={item.id}
+                  incident={item}
+                  onFocus={handleFocus}
+                />
+              ))
+            )}
+          </div>
+        </Sidebar>
 
-      <div className="flex-1 relative">
-        <MapView
-          data={filteredData}
-          center={center}
-          onBoundsChange={setMapBounds}
-        />
+        <div className="flex-1 relative">
+          <MapView
+            data={filteredData}
+            center={center}
+            onBoundsChange={setMapBounds}
+          />
+        </div>
       </div>
     </div>
   );
