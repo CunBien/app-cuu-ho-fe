@@ -7,16 +7,6 @@ import FilterPanel from "../components/sidebar/filter/FilterPanel";
 import RescueCard from "../components/sidebar/incidents/RescueCard";
 import MapView from "../components/map/MapView";
 import { useFilteredData } from "../hooks/useFilteredData";
-import L from "leaflet";
-
-// Fix icon mặc định Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-});
 
 const center = [16.0471, 108.2062]; // Việt Nam
 
@@ -57,8 +47,8 @@ export default function IncientPage() {
             filteredData.map((item) => (
               <RescueCard
                 key={item.id}
-                incident={item}   // ✅ Sửa ở đây: data -> incident
-                onFocus={handleFocus} 
+                incident={item} // ✅ Sửa ở đây: data -> incident
+                onFocus={handleFocus}
               />
             ))
           )}

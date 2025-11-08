@@ -1,25 +1,30 @@
 ﻿// src/utils/mapUtils.js
-import L from "leaflet";
-
+/**
+ * Trả về SVG string cho marker
+ * Dùng với dangerouslySetInnerHTML trong react-map-gl
+ */
 export function getMarkerIcon(urgency) {
   const colors = {
-    critical: "#ef4444",
-    high: "#f97316",
-    medium: "#eab308",
+    critical: "#ef4444", // đỏ
+    high: "#f97316", // cam
+    medium: "#eab308", // vàng
   };
-  const color = colors[urgency] || "#3b82f6";
 
-  return L.divIcon({
-    className: "custom-marker",
-    html: `<div style="
-      background: ${color};
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 3px solid white;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    "></div>`,
-    iconSize: [24, 24],
-    iconAnchor: [12, 12],
-  });
+  const color = colors[urgency?.toLowerCase()] || "#3b82f6"; // xanh dương mặc định
+
+  return `
+    <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <circle
+        cx="16"
+        cy="16"
+        r="12"
+        fill="${color}"
+        stroke="white"
+        stroke-width="3"
+        style="filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));"
+      />
+      <!-- Điểm trắng nhỏ ở giữa (tùy chọn) -->
+      <circle cx="16" cy="16" r="4" fill="white" />
+    </svg>
+  `.trim();
 }

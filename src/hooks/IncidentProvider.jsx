@@ -1,7 +1,7 @@
 // src/hooks/useIncidents.js
 
 import React, { useState, useCallback } from "react";
-import { getAllIncidents } from "../services/rescueService";
+import { getAllIncidents } from "../services/rescueService.js";
 
 export function IncidentProvider({ children }) {
   const [incidents, setIncidents] = useState([]);
