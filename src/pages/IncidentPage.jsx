@@ -1,4 +1,5 @@
-﻿import { useState } from "react";
+﻿// src/pages/IncientPage.jsx
+import { useState } from "react";
 import { mockData } from "../data/mockData";
 import Sidebar from "../components/sidebar/SideBar";
 import SearchBar from "../components/sidebar/search/SearchBar";
@@ -19,15 +20,6 @@ L.Icon.Default.mergeOptions({
 
 const center = [16.0471, 108.2062]; // Việt Nam
 
-/** @type {[string, function]} */
-/** @type {[DisasterType, function]} */
-/** @type {[UrgencyLevel, function]} */
-/** @type {[import("leaflet").LatLngBounds|null, function]} */
-/**
- * @typedef {"all"|"critical"|"high"|"medium"|"low"} UrgencyLevel
- * @typedef {"all"|"flood"|"landslide"|"storm"} DisasterType
- */
-
 export default function IncientPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDisaster, setSelectedDisaster] = useState("all");
@@ -39,6 +31,12 @@ export default function IncientPage() {
     { searchTerm, selectedDisaster, selectedUrgency },
     mapBounds
   );
+
+  // Hàm tạm để test focus marker khi click "Xem trên bản đồ"
+  const handleFocus = (incident) => {
+    console.log("Focus on:", incident);
+    // Sau này có thể dùng để điều khiển MapView
+  };
 
   return (
     <div className="flex h-screen">
@@ -56,7 +54,13 @@ export default function IncientPage() {
               Không tìm thấy thông tin cứu hộ.
             </p>
           ) : (
-            filteredData.map((item) => <RescueCard key={item.id} data={item} />)
+            filteredData.map((item) => (
+              <RescueCard
+                key={item.id}
+                incident={item}   // ✅ Sửa ở đây: data -> incident
+                onFocus={handleFocus} 
+              />
+            ))
           )}
         </div>
       </Sidebar>
