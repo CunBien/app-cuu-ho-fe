@@ -2,9 +2,6 @@
 import { useState } from "react";
 import { mockData } from "../data/mockData";
 import Sidebar from "../components/sidebar/SideBar";
-import SearchBar from "../components/sidebar/search/SearchBar";
-import FilterPanel from "../components/sidebar/filter/FilterPanel";
-import RescueCard from "../components/sidebar/incidents/RescueCard";
 import MapView from "../components/map/MapView";
 import Header from "../components/header/Header";
 import { useFilteredData } from "../hooks/useFilteredData";
@@ -34,30 +31,16 @@ export default function IncientPage() {
     <div>
       <Header />
       <div className="flex flex-row h-screen">
-        <Sidebar>
-          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <FilterPanel
-            selectedDisaster={selectedDisaster}
-            setSelectedDisaster={setSelectedDisaster}
-            selectedUrgency={selectedUrgency}
-            setSelectedUrgency={setSelectedUrgency}
-          />
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {filteredData.length === 0 ? (
-              <p className="text-gray-500 text-center">
-                Không tìm thấy thông tin cứu hộ.
-              </p>
-            ) : (
-              filteredData.map((item) => (
-                <RescueCard
-                  key={item.id}
-                  incident={item}
-                  onFocus={handleFocus}
-                />
-              ))
-            )}
-          </div>
-        </Sidebar>
+        <Sidebar
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedDisaster={selectedDisaster}
+          setSelectedDisaster={setSelectedDisaster}
+          selectedUrgency={selectedUrgency}
+          setSelectedUrgency={setSelectedUrgency}
+          filteredData={filteredData}
+          handleFocus={handleFocus}
+        ></Sidebar>
 
         <div className="flex-1 relative">
           <MapView
