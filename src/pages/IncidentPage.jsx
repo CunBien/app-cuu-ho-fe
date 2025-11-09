@@ -13,7 +13,6 @@ export default function IncientPage() {
   const [selectedDisaster, setSelectedDisaster] = useState("all");
   const [selectedUrgency, setSelectedUrgency] = useState("all");
   const [mapBounds, setMapBounds] = useState(null);
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const filteredData = useFilteredData(
     mockData,
