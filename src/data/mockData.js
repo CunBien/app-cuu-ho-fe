@@ -2,20 +2,19 @@
  * Dữ liệu giả lập (mock) các sự cố cứu hộ cứu nạn
  * Phục vụ hiển thị trên bản đồ và danh sách sự kiện
  *
- * ĐÃ SỬA: Chuyển từ mảng 'coordinates' sang thuộc tính 'longitude' và 'latitude'
- * để khớp với logic của component (RescueCard, MapComponent).
+ * ĐÃ CHUẨN HÓA: Sử dụng mảng 'coordinates': [longitude, latitude] cho tất cả các mục.
  */
 
 export const mockData = [
   {
     id: "1",
     name: "Quảng Bình - Thôn Hồng Thủy",
-    coordinates: [106.3487, 17.4686], // Cũ
+    coordinates: [106.3487, 17.4686], // [Kinh độ, Vĩ độ]
     urgency: "critical",
     disasterType: "flood",
     floodLevel: 2.5,
     affectedPeople: 450,
-    timestamp: "2025-11-08T03:49:00.000Z", // Sử dụng thời gian cố định để tránh thay đổi khi test
+    timestamp: "2025-11-08T03:49:00.000Z",
     description:
       "Ngập lụt nghiêm trọng, cần cứu trợ khẩn cấp. Nhiều hộ dân bị cô lập và thiếu lương thực.",
     status: "pending",
@@ -26,7 +25,7 @@ export const mockData = [
   {
     id: "2",
     name: "Quảng Trị - Hải Lăng",
-    coordinates: [107.0471, 16.7943], 
+    coordinates: [107.0471, 16.7943],
     urgency: "high",
     disasterType: "flood",
     floodLevel: 1.8,
@@ -36,13 +35,12 @@ export const mockData = [
     status: "in-progress",
     image:
       "https://media.vneconomy.vn/images/upload/2023/11/16/401088131-880720866754718-5091618574931240933-n.jpg",
-    path:
-      "https://vneconomy.vn/vung-ron-lu-hai-lang-hon-1-800-ngoi-nha-ngap-trong-nuoc-lu.html",
+    path: "https://vneconomy.vn/vung-ron-lu-hai-lang-hon-1-800-ngoi-nha-ngap-trong-nuoc-lu.html",
   },
   {
     id: "3",
     name: "Huế - Phú Lộc",
-    coordinates: [107.7184, 16.2782], 
+    coordinates: [107.7184, 16.2782],
     urgency: "medium",
     disasterType: "storm",
     floodLevel: 1.2,
@@ -53,6 +51,8 @@ export const mockData = [
     status: "in-progress",
     image:
       "https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2020/10/28/849553/Bao-So-9-Cay-Do-Rap-.jpg",
+    path: 
+      "https://laodong.vn/xa-hoi/hue-gio-bao-giat-khung-khiep-cay-coi-do-hang-loat-tren-duong-849553.ldo",
   },
   {
     id: "4",
@@ -72,7 +72,7 @@ export const mockData = [
   {
     id: "5",
     name: "Đà Nẵng - Hòa Vang",
-    coordinates: [108.0717, 16.0089], 
+    coordinates: [108.0717, 16.0089],
     urgency: "low",
     disasterType: "flood",
     floodLevel: 0.5,
@@ -85,6 +85,8 @@ export const mockData = [
   {
     id: "6",
     name: "Quảng Ngãi - Bình Sơn",
+    // ĐÃ THÊM: Tọa độ cho Bình Sơn
+    coordinates: [108.7500, 15.3333],
     urgency: "high",
     disasterType: "flood",
     floodLevel: 2.1,
@@ -94,7 +96,9 @@ export const mockData = [
       "Ngập sâu trên diện rộng, nhiều tuyến đường bị chia cắt, cần thuyền cứu hộ và lương thực khẩn cấp.",
     status: "pending",
     image:
-      "https://media.baotintuc.vn/Upload/4b8fe7d5209d4637a9e924d2084eaf6a/2023/10/17/quang-ngai-lut.jpg",
+      "https://image.baoquangngai.vn//data/dataimages/202110/original/images2409554_5.jpg",
+    path:
+    "https://baoquangngai.vn/channel/2024/202110/binh-son-nhieu-xa-ven-song-tra-bong-bi-ngap-sau-trong-nuoc-lu-3085503/",
   },
   {
     id: "7",
@@ -109,7 +113,9 @@ export const mockData = [
       "Một số khu vực vẫn còn ngập, chính quyền đang tổ chức di dời người dân đến nơi an toàn.",
     status: "in-progress",
     image:
-      "https://baonghean.vn/file/e783e9e42d3a4b2db84f981c3a217a5b/2023/10/13/lut-nghe-an.jpg",
+      "https://truyenhinhnghean.vn/file/4028eaa46735a26101673a4df345003c/4028eaa467f477c80167f4aa053f0c68/092022/do_luong_1_20220929111105.jpg",
+    path:
+    "https://truyenhinhnghean.vn/doi-song-xa-hoi/202209/do-luong-mua-lon-suot-dem-gay-ngap-cuc-bo-chia-cat-quoc-lo-46-89f49e1/",
   },
   {
     id: "8",
@@ -124,6 +130,8 @@ export const mockData = [
       "Ngập lụt cực kỳ nghiêm trọng, nhiều khu vực bị cô lập hoàn toàn. Cần cứu trợ khẩn cấp.",
     status: "pending",
     image:
-      "https://media.baohatinh.vn/upload/reader/2023/10/17/lu-lut-ha-tinh-1_1710231656.jpg",
+      "https://file3.qdnd.vn/data/images/0/2023/10/31/upload_2260/huong%20khe%20ngap.jpg?dpi=150&quality=100&w=870",
+    path: 
+    "https://www.qdnd.vn/xa-hoi/cap-nhat-mua-lu-tai-ha-tinh-luc-luong-vu-trang-quan-khu-4-huy-dong-luc-luong-khac-phuc-hau-qua-mua-lu-tai-ha-tinh-749367",
   },
 ];

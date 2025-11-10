@@ -1,8 +1,7 @@
-// src/components/IncidentCard.jsx
 import React from "react";
 import PropTypes from "prop-types";
 
-// === Styles ===
+// ===== Styles =====
 const cardContainer = (isSelected) => ({
   display: "flex",
   alignItems: "flex-start",
@@ -15,6 +14,7 @@ const cardContainer = (isSelected) => ({
   cursor: "pointer",
   transition: "all 0.15s ease-in-out",
   userSelect: "none",
+  marginBottom: 10,
 });
 
 const imageStyle = {
@@ -33,7 +33,7 @@ const textContainer = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
-  minWidth: 0, // Quan trọng: tránh text bị tràn
+  minWidth: 0,
 };
 
 const titleStyle = {
@@ -76,29 +76,29 @@ const expandButton = {
   cursor: "pointer",
   transition: "background 0.2s",
   flexShrink: 0,
+  border: "none",
 };
 
-// === Component ===
+// ===== Component =====
 const IncidentCard = ({ incident, onSelect, onExpand, isSelected }) => {
   const hasImage = !!(incident?.image || incident?.imageUrl);
   const imageSrc = incident?.image || incident?.imageUrl || "";
-  const title = incident?.title || "Sự cố chưa có tiêu đề";
+  const title = incident?.title || incident?.name || "Sự cố chưa có tiêu đề";
   const description = incident?.description || "Chưa có mô tả.";
   const status = incident?.status || "Cần cứu trợ";
 
-  // Cắt mô tả nếu quá dài
   const shortDesc =
     description.length > 60 ? description.slice(0, 60) + "..." : description;
 
   return (
     <div
       style={cardContainer(isSelected)}
-      onClick={onSelect}
+      onClick={() => onSelect?.(incident)}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && onSelect?.()}
+      onKeyDown={(e) => e.key === "Enter" && onSelect?.(incident)}
     >
-      {/* Ảnh */}
+      {/* === Ảnh === */}
       {hasImage ? (
         <img src={imageSrc} alt={title} style={imageStyle} loading="lazy" />
       ) : (
@@ -117,7 +117,7 @@ const IncidentCard = ({ incident, onSelect, onExpand, isSelected }) => {
         </div>
       )}
 
-      {/* Nội dung */}
+      {/* === Nội dung === */}
       <div style={textContainer}>
         <div>
           <div style={titleStyle}>{title}</div>
@@ -126,7 +126,7 @@ const IncidentCard = ({ incident, onSelect, onExpand, isSelected }) => {
           </div>
         </div>
 
-        {/* Hàng dưới */}
+        {/* === Hàng dưới === */}
         <div
           style={{
             display: "flex",
@@ -138,16 +138,19 @@ const IncidentCard = ({ incident, onSelect, onExpand, isSelected }) => {
         >
           <span style={statusBadge(status)}>{status}</span>
 
-          {/* Nút mở chi tiết */}
-          <div
+          <button
             onClick={(e) => {
               e.stopPropagation();
-              onExpand?.();
+              onExpand?.(incident);
             }}
             style={expandButton}
             title="Xem chi tiết"
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#dc2626")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "#ef4444")}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background = "#dc2626")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = "#ef4444")
+            }
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
               <path
@@ -158,17 +161,19 @@ const IncidentCard = ({ incident, onSelect, onExpand, isSelected }) => {
                 strokeLinejoin="round"
               />
             </svg>
-          </div>
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-// === PropTypes ===
+// ===== PropTypes =====
 IncidentCard.propTypes = {
   incident: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     title: PropTypes.string,
+    name: PropTypes.string,
     description: PropTypes.string,
     status: PropTypes.string,
     image: PropTypes.string,

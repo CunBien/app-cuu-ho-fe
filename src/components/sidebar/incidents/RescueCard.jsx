@@ -2,7 +2,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
-// 🎨 Giữ màu như bản cũ
+// Màu theo độ khẩn cấp
 const urgencyColors = {
   critical: "bg-red-100 border-red-500",
   high: "bg-orange-100 border-orange-500",
@@ -11,46 +11,65 @@ const urgencyColors = {
   default: "bg-gray-100 border-gray-400",
 };
 
-// 🌀 Biểu tượng theo loại thảm họa
+// Icon theo loại thiên tai
 const disasterIcons = {
   flood: "🌊",
   landslide: "🪨",
   storm: "🌪️",
 };
 
-// Đổi tên prop từ data thành incident, và onFocusMarker thành onFocus để khớp với Parent (IncidentPage.jsx)
 export default function RescueCard({ incident, onFocus }) {
-  // THÊM: Kiểm tra guard clause để tránh lỗi TypeError khi incident là null/undefined
   if (!incident) return null;
-    
+
   const [isExpanded, setIsExpanded] = useState(false);
   const [zoomedImage, setZoomedImage] = useState(null);
 
-  // Kiểm tra xem có đủ tọa độ để di chuyển bản đồ không
-  const hasCoordinates = incident.longitude && incident.latitude;
+  // HỖ TRỢ: coordinates (array [lng, lat]) hoặc latitude/longitude
+  const coordsFromIncident = (() => {
+    if (Array.isArray(incident.coordinates) && incident.coordinates.length >= 2) {
+      // mockData của bạn: [lng, lat]
+      const [lng, lat] = incident.coordinates;
+      return { latitude: lat, longitude: lng };
+    }
+    if (
+      typeof incident.latitude === "number" &&
+      typeof incident.longitude === "number"
+    ) {
+      return { latitude: incident.latitude, longitude: incident.longitude };
+    }
+    // cũng có thể là string numbers
+    if (incident.latitude && incident.longitude) {
+      return {
+        latitude: Number(incident.latitude),
+        longitude: Number(incident.longitude),
+      };
+    }
+    return null;
+  })();
 
-  // Cắt mô tả ngắn
-  // Dùng toán tử '?' an toàn hơn
+  const hasCoordinates = !!coordsFromIncident;
+
   const shortDescription =
     incident.description?.split(".").slice(0, 2).join(".") + ".";
 
-  // Hàm di chuyển bản đồ nội bộ: Gọi prop onFocus và truyền TOÀN BỘ đối tượng incident
-  const handleMapClick = () => {
-    // Chỉ gọi hàm focus nếu có tọa độ
-    if (onFocus && hasCoordinates) {
-      onFocus(incident); 
-    }
+  // Khi bấm "Xem trên bản đồ" -> gọi onFocus với incident mà có latitude/longitude chuẩn
+  const handleMapClick = (e) => {
+    e?.stopPropagation?.();
+    if (!onFocus || !hasCoordinates) return;
+
+    // Trả về object incident nhưng đảm bảo có latitude & longitude fields
+    onFocus({ ...incident, ...coordsFromIncident });
   };
 
-  // Lấy màu theo độ khẩn cấp
   const colorStyle =
     urgencyColors[incident.urgency?.toLowerCase()] || urgencyColors.default;
 
   return (
     <div
       className={`p-3 rounded-xl border-l-4 ${colorStyle} shadow-sm hover:shadow-md transition-all cursor-pointer`}
+      // nếu muốn click card toàn phần cũng focus map, uncomment dòng dưới:
+      // onClick={handleMapClick}
     >
-      {/* Ảnh (nếu có) */}
       {incident.image && (
         <img
           src={incident.image}
@@ -60,7 +79,6 @@ export default function RescueCard({ incident, onFocus }) {
         />
       )}
 
-      {/* Tiêu đề + icon */}
       <div className="flex justify-between items-center mb-2">
         <h3 className="font-semibold text-gray-800 text-base">{incident.name}</h3>
         <span className="text-2xl">
@@ -68,28 +86,23 @@ export default function RescueCard({ incident, onFocus }) {
         </span>
       </div>
 
-      {/* Địa chỉ / Xem bản đồ */}
-      {/* ĐÃ SỬA: Luôn hiển thị nút, nhưng vô hiệu hóa nếu không có tọa độ */}
-      <p 
-        className={`text-sm mb-1`}
-        // Thêm tooltip (chú thích) khi di chuột qua nếu bị vô hiệu hóa
-        title={!hasCoordinates ? 'Không có thông tin tọa độ để hiển thị trên bản đồ' : ''}
+      <p
+        className="text-sm mb-1"
+        title={!hasCoordinates ? "Không có thông tin tọa độ để hiển thị" : ""}
       >
         <button
           onClick={handleMapClick}
-          // Vô hiệu hóa nút và đổi màu nếu không có tọa độ
           disabled={!hasCoordinates}
           className={`hover:underline font-medium transition-colors ${
-            hasCoordinates 
-              ? 'text-blue-600 hover:text-blue-800' // Màu khi kích hoạt
-              : 'text-gray-400 cursor-not-allowed' // Màu khi bị vô hiệu hóa
+            hasCoordinates
+              ? "text-blue-600 hover:text-blue-800"
+              : "text-gray-400 cursor-not-allowed"
           }`}
         >
           📍 Xem trên bản đồ
         </button>
       </p>
 
-      {/* Trạng thái */}
       <p className="text-sm mb-1">
         <strong>Trạng thái:</strong>{" "}
         <span
@@ -109,12 +122,10 @@ export default function RescueCard({ incident, onFocus }) {
         </span>
       </p>
 
-      {/* Mô tả ngắn */}
       <p className="text-sm italic text-gray-700">
         {isExpanded ? incident.description : shortDescription}
       </p>
 
-      {/* Mũi tên mở rộng */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="flex items-center justify-center w-full text-blue-600 mt-2 text-sm hover:underline"
@@ -122,14 +133,13 @@ export default function RescueCard({ incident, onFocus }) {
         {isExpanded ? "Ẩn bớt ▲" : "Xem chi tiết ▼"}
       </button>
 
-      {/* Nội dung mở rộng */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25 }}
             className="overflow-hidden mt-2 text-sm text-gray-700 space-y-1"
           >
             <p>
@@ -141,7 +151,9 @@ export default function RescueCard({ incident, onFocus }) {
             </p>
             <p>
               <strong>Thời gian cập nhật:</strong>{" "}
-              {new Date(incident.timestamp).toLocaleString("vi-VN")}
+              {incident.timestamp
+                ? new Date(incident.timestamp).toLocaleString("vi-VN")
+                : "N/A"}
             </p>
             {incident.path && (
               <p>
@@ -159,7 +171,6 @@ export default function RescueCard({ incident, onFocus }) {
         )}
       </AnimatePresence>
 
-      {/* Ảnh phóng to */}
       {zoomedImage && (
         <div
           className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
@@ -175,6 +186,7 @@ export default function RescueCard({ incident, onFocus }) {
             >
               ✕
             </button>
+
             <TransformWrapper>
               <TransformComponent>
                 <img
