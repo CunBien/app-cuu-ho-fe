@@ -5,18 +5,15 @@ import MapView from "../components/map/MapView";
 import Header from "../components/header/Header";
 import { useFilteredData } from "../hooks/useFilteredData";
 
-// Lưu ý: center ở đây bạn đang để là [lat, lng] (16.0471, 108.2062)
-// Trong khi mockData và Mapbox thường dùng [lng, lat].
-// Hãy đảm bảo nhất quán. Nếu MapView của bạn mong đợi [lat, lng] cho center thì giữ nguyên.
-const center = [16.0471, 108.2062];
+const center = [16.0471, 108.2062]; // [lat, lng] – Đà Nẵng
 
 export default function IncidentPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDisaster, setSelectedDisaster] = useState("all");
   const [selectedUrgency, setSelectedUrgency] = useState("all");
   const [mapBounds, setMapBounds] = useState(null);
-  
-  // Sử dụng ref để điều khiển map
+
+  // Ref điều khiển map – dùng chung cho cả Sidebar và ProvinceSelect
   const mapRef = useRef(null);
 
   const filteredData = useFilteredData(
@@ -25,47 +22,54 @@ export default function IncidentPage() {
     mapBounds
   );
 
-  // --- HÀM ĐÃ SỬA ---
+  // Focus vào một điểm sự cố
   const handleFocus = (incident) => {
-    // 1. Kiểm tra mapRef có tồn tại không
-    if (!mapRef.current) {
-        console.error("❌ Lỗi: mapRef chưa sẵn sàng.");
-        return;
+    if (!mapRef.current || !incident) {
+      console.warn("Map chưa sẵn sàng hoặc incident không hợp lệ");
+      return;
     }
-    if (!incident) return;
 
-    // 2. Lấy toạ độ [lng, lat] một cách an toàn
     let lng, lat;
-    if (Array.isArray(incident.coordinates) && incident.coordinates.length >= 2) {
-      [lng, lat] = incident.coordinates;
-    } else if (incident.longitude !== undefined && incident.latitude !== undefined) {
+    if (
+      Array.isArray(incident.coordinates) &&
+      incident.coordinates.length >= 2
+    ) {
+      [lng, lat] = incident.coordinates; // [lng, lat]
+    } else if (incident.longitude && incident.latitude) {
       lng = Number(incident.longitude);
       lat = Number(incident.latitude);
+    } else {
+      console.warn("Không có tọa độ:", incident.name);
+      return;
     }
 
-    // 3. Kiểm tra toạ độ hợp lệ
-    if (lng === undefined || lat === undefined || isNaN(lng) || isNaN(lat)) {
-        console.warn("⚠️ Cảnh báo: Không tìm thấy toạ độ hợp lệ cho mục này:", incident.name);
-        return;
-    }
-
-    console.log(`✈️ Đang bay tới: ${incident.name} tại [${lng}, ${lat}]`);
-
-    // 4. Gọi flyTo trực tiếp từ mapRef.current (KHÔNG DÙNG .getMap())
     mapRef.current.flyTo({
       center: [lng, lat],
-      zoom: 14,        // Zoom gần hơn một chút để nhìn rõ
-      speed: 1.5,      // Tốc độ bay vừa phải
-      essential: true, // Bắt buộc thực hiện animation
+      zoom: 15,
+      duration: 2000,
+      speed: 1.8,
+      curve: 1.42,
+      essential: true,
     });
   };
-  // -------------------
+
+  // Focus vào tỉnh (gọi từ ProvinceSelect)
+  const flyToProvince = (lng, lat, zoom = 9) => {
+    if (!mapRef.current) return;
+
+    mapRef.current.flyTo({
+      center: [lng, lat],
+      zoom,
+      duration: 2500,
+      essential: true,
+    });
+  };
 
   return (
-    <div className="flex flex-col h-screen">
-      <Header />
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <Header mapRef={mapRef} />
+
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
         <Sidebar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -74,16 +78,15 @@ export default function IncidentPage() {
           selectedUrgency={selectedUrgency}
           setSelectedUrgency={setSelectedUrgency}
           filteredData={filteredData}
-          handleFocus={handleFocus} // <-- Truyền hàm handleFocus xuống Sidebar
+          handleFocus={handleFocus}
         />
 
-        {/* Map Area */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative bg-white">
           <MapView
             data={filteredData}
             center={center}
             onBoundsChange={setMapBounds}
-            mapRef={mapRef} // <-- Truyền ref xuống MapView
+            mapRef={mapRef}
           />
         </div>
       </div>
