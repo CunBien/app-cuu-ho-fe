@@ -116,27 +116,107 @@ export default function MapView({
           latitude={toLngLat(selectedItem)![1]}
           anchor="top"
           onClose={() => setSelectedItem(null)}
-          closeButton={true}
+          closeButton={false}
           closeOnClick={false}
-          className="custom-popup"
+          offset={15}
+          className="!p-0"
+          maxWidth="none"
         >
-          <div className="p-2 min-w-[200px]">
-            <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="font-semibold text-sm">
-                {disasterIcons[selectedItem.disaster]} {selectedItem.name}
-              </h3>
-              <Badge variant="secondary" className="text-xs shrink-0">
-                {urgencyLabels[selectedItem.urgency]}
-              </Badge>
+          <div className="w-[calc(100vw-2rem)] max-w-sm bg-card/95 backdrop-blur-sm rounded-2xl overflow-hidden shadow-2xl border border-border/50 animate-scale-in">
+            {/* Close button - Mobile friendly */}
+            <button
+              onClick={() => setSelectedItem(null)}
+              className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-background/80 hover:bg-background flex items-center justify-center transition-all hover:scale-110 shadow-md"
+              aria-label="Đóng"
+            >
+              <svg
+                className="w-4 h-4 text-foreground"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Header */}
+            <div className="bg-gradient-to-br from-primary/15 via-primary/10 to-transparent px-4 py-4 border-b border-border/50">
+              <div className="flex items-start gap-3 pr-8">
+                <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center text-3xl shrink-0 shadow-sm">
+                  {disasterIcons[selectedItem.disaster]}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-foreground text-base leading-tight mb-2">
+                    {selectedItem.name}
+                  </h3>
+                  <Badge
+                    variant={
+                      selectedItem.urgency === "high"
+                        ? "destructive"
+                        : selectedItem.urgency === "medium"
+                        ? "default"
+                        : "secondary"
+                    }
+                    className="text-xs"
+                  >
+                    {urgencyLabels[selectedItem.urgency]}
+                  </Badge>
+                </div>
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground mb-2">
-              {selectedItem.description.split(".")[0]}.
-            </p>
-            {selectedItem.status && (
-              <p className="text-xs font-medium">
-                Trạng thái: {selectedItem.status}
-              </p>
-            )}
+
+            {/* Content */}
+            <div className="px-4 py-4 space-y-4">
+              <div>
+                <p className="text-xs text-muted-foreground font-semibold mb-1.5 uppercase tracking-wide">
+                  Mô tả
+                </p>
+                <p className="text-sm text-foreground leading-relaxed">
+                  {selectedItem.description}
+                </p>
+              </div>
+
+              {selectedItem.status && (
+                <div className="bg-muted/30 rounded-lg p-3">
+                  <p className="text-xs text-muted-foreground font-semibold mb-1.5 uppercase tracking-wide">
+                    Trạng thái
+                  </p>
+                  <p className="text-sm text-foreground font-medium">
+                    {selectedItem.status}
+                  </p>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                <div className="flex items-center gap-1.5 text-muted-foreground">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  <p className="text-xs font-medium">{selectedItem.province}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </Popup>
       )}
