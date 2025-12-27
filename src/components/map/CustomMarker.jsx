@@ -16,7 +16,7 @@ const markerStyleBase = {
 
 // Sử dụng React.memo cho cả marker để tối ưu hiệu năng
 const CustomMarker = React.memo(({ incident, onClick, isSelected }) => {
-  const color = getMarkerColor(incident.status);
+  const color = getMarkerColor(incident.urgency);
 
   // Tạo style động dựa trên prop isSelected
   const dynamicStyle = {

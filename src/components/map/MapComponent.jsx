@@ -18,17 +18,25 @@ const MapComponent = React.memo(({ incidents, onMarkerClick, selectedIncident })
 
   // Thêm một useEffect để di chuyển bản đồ đến marker được chọn
   useEffect(() => {
-    if (selectedIncident) {
+    if (selectedIncident && Number.isFinite(selectedIncident.longitude) && Number.isFinite(selectedIncident.latitude)) {
       setViewState(currentViewState => ({
         ...currentViewState,
-        longitude: selectedIncident.longitude,
-        latitude: selectedIncident.latitude,
+        longitude: selectedIncident.longitude, // Đọc từ longitude
+        latitude: selectedIncident.latitude,   // Đọc từ latitude
         zoom: 14
       }));
     }
   }, [selectedIncident]);
 
   console.log("MapComponent is rendering");
+
+  // Hàm xử lý khi bản đồ di chuyển xong
+  const handleMoveEnd = (evt) => {
+    // if (onBoundsChange) {
+    //   onBoundsChange(evt.target.getBounds());
+    // }
+    // Tạm thời comment lại để tránh lỗi, sẽ kích hoạt sau
+  };
 
   return (
     <Map
@@ -40,7 +48,9 @@ const MapComponent = React.memo(({ incidents, onMarkerClick, selectedIncident })
     >
       <NavigationControl position="top-right" />
 
-      {incidents.map(incident => (
+      {incidents
+        .filter(incident => Number.isFinite(incident.longitude) && Number.isFinite(incident.latitude))
+        .map(incident => (
         <CustomMarker
           key={incident.id}
           incident={incident}
